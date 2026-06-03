@@ -1,0 +1,52 @@
+# DeFi Sentinel Configuration
+# Copy to config.yaml and edit
+
+agent:
+  model: "TheBloke/Llama-2-7B-Chat-GPTQ"
+  backend: "auto"  # auto, cuda, rocm, cpu
+  max_iterations: 10
+  max_budget_usd: 100.0
+  simulate_before_execute: true
+
+chains:
+  - name: ethereum
+    rpc_url: "https://eth.llamarpc.com"
+    enabled: true
+  - name: arbitrum
+    rpc_url: "https://arb1.arbitrum.io/rpc"
+    enabled: true
+  - name: base
+    rpc_url: "https://mainnet.base.org"
+    enabled: true
+  - name: sepolia
+    rpc_url: "https://sepolia.drpc.org"
+    enabled: true
+
+monitors:
+  mempool:
+    enabled: false
+    chains: ["ethereum"]
+  events:
+    enabled: true
+    chains: ["ethereum", "arbitrum", "base"]
+    watch_addresses: []
+  price:
+    enabled: true
+    sources: ["coingecko", "1inch"]
+
+safety:
+  kill_switch_file: "~/.defi-sentinel/killswitch"
+  spending:
+    max_usd: 100.0
+    max_per_tx: 50.0
+    max_per_hour: 25.0
+    max_per_day: 75.0
+
+logging:
+  level: "INFO"
+  file: "sentinel.log"
+
+# Wallet (NEVER commit real keys — use env vars or keystore)
+# wallet:
+#   address: "${WALLET_ADDRESS}"
+#   key: "${WALLET_KEY}"  # Or use a keystore file
